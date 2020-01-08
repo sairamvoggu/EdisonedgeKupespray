@@ -1,5 +1,5 @@
 ---
- - hosts: ubuntuservers
+ - hosts: centosservers
   #  remote_user: ubuntu
    connection: ssh
    gather_facts: true
