@@ -1,0 +1,54 @@
+---
+ - hosts: centosservers
+  #  remote_user: ubuntu
+   connection: ssh
+   gather_facts: true
+   become: yes
+  #  become_method: sudo
+  #  sudo: no
+  # Upgrade all the Ubuntu servers.
+  # ansible ubuntu -m apt -a "upgrade=yes update_cache=yes" -b
+   tasks:
+     - name: updating OS
+       yum:
+         name: "*"
+         state: latest
+        #  step 2
+     - name: Disable SELinux
+       selinux:
+          state: disabled
+        #  step 3
+     
+     - name: Rebooting machine
+       shell: "sleep 5 && reboot"
+       async: 1
+       poll: 0
+       ignore_errors: true
+     - name: Waiting for system to reboot
+       wait_for_connection:
+         connect_timeout: 20
+         sleep: 5
+         delay: 5
+         timeout: 60
+        # step4
+     - name: Disabling firewall and stop services 
+       service:
+          name: firewalld
+          state: stopped
+          enabled: False
+        # step 5
+     - name: Installing epel-release, Ansible, python36
+       yum:
+         name: ['epel-release', 'ansible', 'python36']
+         state: latest
+     - name: Installing python-pip
+       yum:
+         name: python-pip
+         state: latest
+     - name: Install jinja2
+       pip:
+         name: Jinja2
+         state: latest
+        
+
+      
