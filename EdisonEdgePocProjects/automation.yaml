@@ -16,7 +16,7 @@
          # step 1
      - name: updating OS
        yum:
-         name: ubuntu
+         name: centos
          upgrade: yes
          update_cache: yes
         #  step 2
